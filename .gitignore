@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# OpenFOAM and Gmsh outputs: cases are built and run in a work directory outside the repo
+/work/
+processor*/
+postProcessing/
+polyMesh/
+[0-9]*/
+!cases/channel/0/
+*.msh
+log.*
+results/*.log

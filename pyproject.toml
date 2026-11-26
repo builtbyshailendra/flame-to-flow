@@ -1,0 +1,25 @@
+[project]
+name = "flame-to-flow"
+version = "0.1.0"
+description = "A methane-air flame in Cantera, its hot products pushed through a channel in OpenFOAM on a blockMesh and a Gmsh mesh, each step checked against a known answer"
+requires-python = ">=3.12"
+dependencies = [
+  "cantera==3.2.0",
+  "gmsh==4.15.2",
+  "numpy==2.5.5",
+  "matplotlib==3.11.2",
+  "meshio==5.3.5",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q -rs"
+markers = [
+  "foam: needs OpenFOAM (native or through Docker); skipped when it is missing",
+  "slow: runs Cantera flame solves (about a minute)",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
