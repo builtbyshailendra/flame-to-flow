@@ -25,7 +25,7 @@ Gmsh API ─► .msh 2.2 ─► gmshToFoam ─┴─► simpleFoam (laminar, Re 
 pip install cantera==3.2.0 gmsh==4.15.2 numpy==2.5.5 matplotlib==3.11.2 meshio==5.3.5 pytest==9.2.0
 python -m pytest                      # 64 test cases; the 34 OpenFOAM ones skip without OpenFOAM
 python scripts/flame_study.py         # the full Cantera sweep: about 12 minutes on the laptop
-python scripts/flame_study.py --quick # CI size: 3 mixtures, coarser grid, about 1 minute
+python scripts/flame_study.py --quick # CI size: 3 mixtures, coarser grid: 3 minutes here, 1 in CI
 ```
 
 OpenFOAM is found either natively (`simpleFoam` on PATH, environment sourced) or through Docker:
