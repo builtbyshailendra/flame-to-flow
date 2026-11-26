@@ -1,0 +1,4 @@
+# OpenFOAM reads these on Linux: keep LF line endings in the case templates
+cases/** text eol=lf
+*.py text eol=lf
+*.yml text eol=lf

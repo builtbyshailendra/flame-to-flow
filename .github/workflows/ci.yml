@@ -1,0 +1,85 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PY_DEPS: cantera==3.2.0 gmsh==4.15.2 numpy==2.5.5 matplotlib==3.11.2 meshio==5.3.5 pytest==9.2.0
+
+jobs:
+  flame:
+    name: Cantera, Gmsh and unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: system libraries the gmsh wheel links against
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libglu1-mesa libxcursor1 libxft2 libxinerama1
+      - name: install
+        run: pip install $PY_DEPS
+      - name: tests (OpenFOAM ones are skipped here and run in the flow job)
+        run: python -m pytest -m "not foam"
+      - name: reduced flame study (3 mixtures, coarser grid; the full sweep is run locally)
+        run: python scripts/flame_study.py --quick --out ci-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flame-ci-results
+          path: ci-results/
+          retention-days: 14
+
+  flow:
+    name: OpenFOAM v2406 on blockMesh and Gmsh meshes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      F2F_FOAM_IMAGE: opencfd/openfoam-run:2406
+      F2F_WORK: ${{ github.workspace }}/work
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: system libraries the gmsh wheel links against
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libglu1-mesa libxcursor1 libxft2 libxinerama1
+      - name: install
+        run: pip install $PY_DEPS
+      - name: pull the OpenFOAM image and check it runs headless
+        run: |
+          docker pull -q "$F2F_FOAM_IMAGE"
+          docker run --rm --entrypoint bash "$F2F_FOAM_IMAGE" -c \
+            'ls -d /usr/lib/openfoam/openfoam*; . /usr/lib/openfoam/openfoam*/etc/bashrc; echo "WM_PROJECT_VERSION=$WM_PROJECT_VERSION"; which simpleFoam blockMesh gmshToFoam postProcess'
+      - name: OpenFOAM tests (build and run the four cases, check against Poiseuille)
+        run: python -m pytest -m foam
+      - name: flow report
+        run: python scripts/flow_study.py --out ci-results
+      - name: collect logs
+        if: always()
+        run: |
+          mkdir -p ci-results/logs
+          for d in work/*/; do
+            n=$(basename "$d"); mkdir -p "ci-results/logs/$n"
+            cp "$d"log.* "ci-results/logs/$n/" 2>/dev/null || true
+            cp "$d"constant/polyMesh/boundary "ci-results/logs/$n/" 2>/dev/null || true
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flow-ci-results
+          path: ci-results/
+          retention-days: 14

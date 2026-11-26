@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  flame-to-flow: 2-D laminar channel of burnt methane-air gas.
+  Template: f2f/foam.py fills in the double-brace placeholders.
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+
+application     simpleFoam;
+
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         {{endTime}};        // iterations at most; residualControl stops it earlier
+deltaT          1;
+
+writeControl    timeStep;
+writeInterval   {{endTime}};        // only the converged (or last) iteration is written
+purgeWrite      0;
+writeFormat     ascii;
+writePrecision  12;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable false;

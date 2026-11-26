@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  flame-to-flow: 2-D laminar channel of burnt methane-air gas.
+  Template: f2f/foam.py fills in the double-brace placeholders.
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sample;
+}
+
+// postProcess -func sample: profiles across the channel at a few stations.
+// "midPoint" puts one sample in the middle of each cell the line crosses (the cell centre's y)
+// and "cell" interpolation returns that cell's value, so the samples are exactly the solver's
+// cell values. The x stations avoid cell faces on every mesh level.
+type            sets;
+libs            (sampling);
+interpolationScheme cell;
+setFormat       raw;
+fields          (U p);
+
+sets
+{
+{{profileSets}}
+}

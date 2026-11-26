@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  flame-to-flow: 2-D laminar channel of burnt methane-air gas.
+  Template: f2f/foam.py fills in the double-brace placeholders.
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampleCentreline;
+}
+
+// postProcess -func sampleCentreline: u and p along y = h/2, which lies on cell faces when ny is
+// even, so values are interpolated from the cells and points around it ("cellPoint").
+type            sets;
+libs            (sampling);
+interpolationScheme cellPoint;
+setFormat       raw;
+fields          (U p);
+
+sets
+{
+    centreline
+    {
+        type    uniform;
+        axis    xyz;
+        start   (0 {{hHalf}} {{zMid}});
+        end     ({{L}} {{hHalf}} {{zMid}});
+        nPoints {{nCentre}};
+    }
+}
