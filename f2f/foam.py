@@ -18,9 +18,19 @@ from .channel import Channel, Mesh
 
 TEMPLATE = Path(__file__).resolve().parent.parent / "cases" / "channel"
 
-# x stations (in channel heights) of the profiles sampled across the channel. The 0.03 offset
-# keeps every station off the cell faces of all three mesh levels (dx = h/4, h/8, h/16).
-STATIONS_H = (1.03, 2.53, 5.03, 10.03, 20.03, 25.03)
+# x stations (in channel heights) of the profiles sampled across the channel: four in the
+# entrance region, and one 5 h before the outlet where the flow is developed (25.03 h in the
+# 30 h channel). The 0.03 offset keeps every station off the cell faces of all three mesh
+# levels (dx = h/4, h/8, h/16).
+STATIONS_H = (1.03, 2.53, 5.03, 10.03, 20.03)
+
+
+def stations(ch: Channel) -> list[float]:
+    return sorted(set(STATIONS_H) | {developed_station(ch)})
+
+
+def developed_station(ch: Channel) -> float:
+    return round(ch.length_h - 4.97, 2)
 
 
 class FoamMissing(RuntimeError):
@@ -52,14 +62,17 @@ def write_case(case: Path, ch: Channel, mesh: Mesh, *, end_time: int = 20000,
         shutil.rmtree(case)
     shutil.copytree(TEMPLATE, case)
     z_mid = ch.dz / 2
-    eps = 1e-6 * ch.h
+    # The lines start and end outside the channel. Started just inside the first cell, a line
+    # lost that cell (the second CI run had 9 samples on 10 cells): midPoint sampling takes the
+    # midpoints between the faces the line crosses, and it crossed no face below that cell.
+    out = 0.1 * ch.h
     sets = []
-    for s in STATIONS_H:
+    for s in stations(ch):
         x = s * ch.h
         sets.append(
             f"    {station_name(s)}\n    {{\n        type    midPoint;\n        axis    xyz;\n"
-            f"        start   ({x:.10g} {eps:.10g} {z_mid:.10g});\n"
-            f"        end     ({x:.10g} {ch.h - eps:.10g} {z_mid:.10g});\n    }}"
+            f"        start   ({x:.10g} {-out:.10g} {z_mid:.10g});\n"
+            f"        end     ({x:.10g} {ch.h + out:.10g} {z_mid:.10g});\n    }}"
         )
     props = props or {}
     values = {

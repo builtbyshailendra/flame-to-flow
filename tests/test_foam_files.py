@@ -62,14 +62,16 @@ def test_case_files_are_filled_in(tmp_path):
     bm = (case / "system/blockMeshDict").read_text()
     assert "(120 10 1)" in bm and "(0.3  0.01  0.001)" in bm
     sample = (case / "system/sample").read_text()
-    for s in foam.STATIONS_H:
+    for s in foam.stations(ch):
         assert foam.station_name(s) in sample
+    assert foam.station_name(25.03) in sample        # the developed-flow station, 5 h before the outlet
+    assert "start   (0.2503 -0.001 0.0005);" in sample  # lines start outside the channel
 
 
 def test_stations_never_sit_on_a_cell_face():
     for mesh in channel.LEVELS.values():
         dx_h = channel.Channel().length_h / mesh.nx
-        for s in foam.STATIONS_H:
+        for s in foam.stations(channel.Channel()):
             frac = (s / dx_h) % 1.0
             assert 0.05 < frac < 0.95, (mesh, s)
 

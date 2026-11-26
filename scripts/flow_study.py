@@ -62,9 +62,15 @@ def main():
             f"{e['L_e_over_h']:6.2f} {e['durst_over_h']:6.2f}")
     say("\nerr: against the exact -12 mu U / h^2. vs 1-D: against the 1-D discrete solution on the same "
         "ny cells\n(f2f.channel.discrete_poiseuille), i.e. what is left once the mesh error is accounted for.")
-    say(f"L2 prof: relative L2 error of the cell values at x = {study.FD_STATION_H} h against 6U(y/h)(1-y/h).")
-    say(f"L_e: centreline velocity reaches 99% of its value at x = {study.UFD_FROM_H}-{study.UFD_TO_H} h. "
-        f"Durst: {DURST_2005_SOURCE}.")
+    c0 = next(iter(cases.values()))
+    say(f"L2 prof: relative L2 error of the cell values at x = {c0['profile']['station_h']} h against "
+        f"6U(y/h)(1-y/h). dp/dx: least-squares slope of the centreline p over "
+        f"{c0['pressure']['fit_from_h']:g}-{c0['pressure']['fit_to_h']:g} h.")
+    say(f"L_e: centreline velocity reaches 99% of its mean over x = {c0['entrance']['u_fd_from_h']:g}-"
+        f"{c0['entrance']['u_fd_to_h']:g} h. Durst: {DURST_2005_SOURCE}.")
+    say("local dp/dx along the centreline, % steeper than the developed (1-D discrete) value: " + "; ".join(
+        f"{n}: " + ", ".join(f"{k} h {v:+.3f}" for k, v in cases[n]["pressure"]["local_excess_pct"].items())
+        for n in ("blockMesh_medium",)))
 
     block = [f"blockMesh_{k}" for k in LEVELS]
     say("\nmesh convergence (blockMesh, h/dy = 10, 20, 40; dx = h/4, h/8, h/16):")

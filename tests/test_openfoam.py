@@ -46,8 +46,9 @@ def test_solver_converged(cases, name):
 @pytest.mark.parametrize("name", ALL)
 def test_mass_is_conserved(result, name):
     # cell values on uniform cells: their mean is the flow rate over the height
-    p = result["cases"][name]["profile"]
-    assert p["u_mean_sampled"] == pytest.approx(result["channel"]["u_mean"], rel=1e-4)
+    c = result["cases"][name]
+    assert c["profile"]["points"] == c["mesh"]["ny"]          # one sample per cell across
+    assert c["profile"]["u_mean_sampled"] == pytest.approx(result["channel"]["u_mean"], rel=1e-4)
 
 
 @pytest.mark.parametrize("name,tol", [("blockMesh_coarse", 0.015), ("blockMesh_medium", 0.005),
