@@ -76,6 +76,7 @@ jobs:
             n=$(basename "$d"); mkdir -p "ci-results/logs/$n"
             cp "$d"log.* "ci-results/logs/$n/" 2>/dev/null || true
             cp "$d"constant/polyMesh/boundary "ci-results/logs/$n/" 2>/dev/null || true
+            cp -r "$d"postProcessing "ci-results/logs/$n/" 2>/dev/null || true
           done
       - uses: actions/upload-artifact@v4
         if: always()

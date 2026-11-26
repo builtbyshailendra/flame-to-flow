@@ -155,14 +155,21 @@ def read_set(case: Path, func: str, set_name: str, field: str) -> tuple[np.ndarr
         if field not in fields:
             continue
         data = np.loadtxt(f, comments="#", ndmin=2)
-        # columns: x y z, then the fields in file-name order (a file holds fields of one
-        # type only, so every field has the same number of components)
-        ncomp = (data.shape[1] - 3) // len(fields)
-        k = fields.index(field)
-        vals = data[:, 3 + k * ncomp: 3 + (k + 1) * ncomp]
-        return data[:, :3], (vals[:, 0] if ncomp == 1 else vals)
+        # columns: x y z, then the fields in file-name order. v2406 writes all fields of a set
+        # into one file (centreline_p_U.xy: x y z p U_x U_y U_z), so the column count alone
+        # can't say where a field starts: use each field's number of components.
+        start = 3
+        for name in fields:
+            n = FIELD_COMPONENTS[name]
+            if name == field:
+                vals = data[:, start:start + n]
+                return data[:, :3], (vals[:, 0] if n == 1 else vals)
+            start += n
     raise FileNotFoundError(f"no {field} for set {set_name} in {tdir}: "
                             f"{[p.name for p in tdir.iterdir()]}")
+
+
+FIELD_COMPONENTS = {"p": 1, "U": 3}
 
 
 _TIME = re.compile(r"^Time = (\S+)", re.M)

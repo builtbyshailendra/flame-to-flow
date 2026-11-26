@@ -104,6 +104,18 @@ def test_read_set_raw_files(tmp_path):
     assert p.shape == (10,) and p[0] == 7.5
 
 
+def test_read_set_one_file_with_all_fields(tmp_path):
+    # what OpenFOAM v2406 writes: centreline_p_U.xy with columns x y z p U_x U_y U_z
+    d = tmp_path / "postProcessing" / "sampleCentreline" / "812"
+    d.mkdir(parents=True)
+    (d / "centreline_p_U.xy").write_text("0 0.005 0.0005 47.66 4.83 0.0 0.0\n"
+                                         "0.3 0.005 0.0005 0.0 7.10 1e-9 0.0\n")
+    xyz, u = foam.read_set(tmp_path, "sampleCentreline", "centreline", "U")
+    _, p = foam.read_set(tmp_path, "sampleCentreline", "centreline", "p")
+    assert p.tolist() == [47.66, 0.0]
+    assert u[:, 0].tolist() == [4.83, 7.10] and xyz[1, 0] == 0.3
+
+
 def test_read_solver_log(tmp_path):
     log = tmp_path / "log.simpleFoam"
     log.write_text(
