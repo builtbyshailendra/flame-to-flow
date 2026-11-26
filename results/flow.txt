@@ -1,0 +1,35 @@
+OpenFOAM v2406 (docker, opencfd/openfoam-run:2406), simpleFoam, steady laminar; written 2026-11-26 12:34 by GitHub Actions run 45820729750
+fluid: burnt stoichiometric methane-air at 1500 K, 1 atm (Cantera, GRI-Mech 3.0): rho=0.22449 kg/m^3, mu=5.4198e-05 Pa s, nu=2.4143e-04 m^2/s
+channel: h=0.01 m, L=0.300 m (30 h), one cell thick; Re = U h / nu = 200 (Re on D_h = 2h: 400); U_mean=4.82854 m/s
+exact developed flow: u_max/U = 1.5; dp/dx = -12 mu U / h^2 = -31.4039 Pa/m (kinematic -139.8890 m/s^2); entrance length (Durst 2005) 8.92 h
+total wall time for the four cases: 8 s
+
+case                cells  iters solve s  u_max/U  L2 prof dp/dx Pa/m     err  vs 1-D  L_e/h  Durst
+---------------------------------------------------------------------------------------------------
+blockMesh_coarse     1200    194       0   1.4853   0.906%   -30.7950  -1.94% +0.023%   9.25   8.92
+blockMesh_medium     4800    164       1   1.4963   0.233%   -31.2527  -0.48% +0.016%   9.13   8.92
+blockMesh_fine      19200    160       3   1.4990   0.060%   -31.3694  -0.11% +0.015%   9.12   8.92
+gmsh_medium          4800    164       0   1.4963   0.233%   -31.2527  -0.48% +0.016%   9.13   8.92
+
+err: against the exact -12 mu U / h^2. vs 1-D: against the 1-D discrete solution on the same ny cells
+(f2f.channel.discrete_poiseuille), i.e. what is left once the mesh error is accounted for.
+L2 prof: relative L2 error of the cell values at x = 25.03 h against 6U(y/h)(1-y/h). dp/dx: least-squares slope of the centreline p over 22-28 h.
+L_e: centreline velocity reaches 99% of its mean over x = 20-27 h. Durst: Durst, Ray, Unsal, Bayoumi (2005), J. Fluids Eng. 127:1154-1160, channel correlation (quoted in Ray, Durst, Ray, arXiv:1707.04947, Eq. 2b).
+local dp/dx along the centreline, % steeper than the developed (1-D discrete) value: blockMesh_medium: 5 h +22.173, 10 h +3.639, 15 h +0.579, 20 h +0.091, 25 h +0.014
+
+mesh convergence (blockMesh, h/dy = 10, 20, 40; dx = h/4, h/8, h/16):
+  dp/dx error   1.9387%  0.4814%  0.1098%   observed order 2.01, 2.13
+  profile L2    0.9060%  0.2332%  0.0596%   observed order 1.96, 1.97
+  L_e vs Durst  3.6989%  2.3080%  2.2879%   observed order 0.68, 0.01
+  1-D discrete prediction for dp/dx error: -1.9608%  -0.4975%  -0.1248%
+
+blockMesh vs Gmsh, medium level (240 x 20 cells each):
+  dp/dx       blockMesh -139.21561  Gmsh -139.21561  difference +2.86e-10%
+  u_max/U     blockMesh 1.4962502  Gmsh 1.4962502  difference +1.10e-11%
+  profile L2  blockMesh 0.0023317036  Gmsh 0.0023317036  difference -5.26e-09%
+  L_e         blockMesh 0.09126593  Gmsh 0.09126593  difference +5.38e-08%
+  inlet p     blockMesh 48.421416  Gmsh 48.421416  difference +1.65e-09%
+  gmshToFoam wrote patch types {'inlet': 'patch', 'outlet': 'patch', 'walls': 'patch', 'frontAndBack': 'patch'}; fixed to inlet/outlet patch, walls wall, frontAndBack empty
+  iterations: blockMesh 164, Gmsh 164
+
+entrance pressure loss beyond the developed gradient, K = (p_in - |dp/dx| L) / (U^2/2): blockMesh_coarse 0.488, blockMesh_medium 0.554, blockMesh_fine 0.562, gmsh_medium 0.554

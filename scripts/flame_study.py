@@ -38,7 +38,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--out", type=Path, default=RESULTS)
+    ap.add_argument("--plot-only", action="store_true", help="redraw flame.png from the CSVs")
     args = ap.parse_args()
+    if args.plot_only:
+        return replot(args.out)
     out = args.out
     out.mkdir(parents=True, exist_ok=True)
     lines = []
@@ -154,6 +157,18 @@ def main():
     plot(out / f"{name}.png", temps, speeds, grid, ign, fits)
 
 
+def read_csv(path: Path) -> list[dict]:
+    with path.open(encoding="utf-8") as f:
+        return [{k: float(v) for k, v in r.items()} for r in csv.DictReader(f)]
+
+
+def replot(out: Path):
+    ign = read_csv(out / "ignition_delay.csv")
+    fits = {p: flame.arrhenius_fit([r for r in ign if r["P_atm"] == p]) for p in (1.0, 10.0)}
+    plot(out / "flame.png", read_csv(out / "flame_temperature.csv"), read_csv(out / "flame_speed.csv"),
+         read_csv(out / "flame_speed_grid.csv"), ign, fits)
+
+
 def plot(path, temps, speeds, grid, ign, fits):
     plt = setup()
     fig, ax = plt.subplots(2, 2, figsize=(9, 6.6))
@@ -167,8 +182,8 @@ def plot(path, temps, speeds, grid, ign, fits):
     a.errorbar(ph, [s / 100 for p, s, e in literature.HERMANNS_2007],
                yerr=[e / 100 for p, s, e in literature.HERMANNS_2007], fmt="s", ms=4,
                color=REF, mfc="none", label="measured, heat flux, 298 K (Hermanns 2007)")
-    a.set(xlabel="equivalence ratio", ylabel="m/s", title="Laminar flame speed", xlim=(0.6, 1.55))
-    a.legend(loc="lower center")
+    a.set(xlabel="equivalence ratio", ylabel="m/s", title="Laminar flame speed", xlim=(0.6, 1.55), ylim=(0, 0.42))
+    a.legend(loc="lower center", fontsize=7)
     a = ax[1, 0]
     for p_atm, color in ((1.0, BLUE), (10.0, ORANGE)):
         rows = [r for r in ign if r["P_atm"] == p_atm]
@@ -182,11 +197,19 @@ def plot(path, temps, speeds, grid, ign, fits):
     a.set(xlabel="1000 / T0  (1/K)", ylabel="ms", title="Ignition delay, phi = 1 (straight line: Arrhenius fit)")
     a.legend()
     a = ax[1, 1]
-    a.semilogx([r["points"] for r in grid], [r["S_L"] for r in grid], "-o", color=AQUA)
+    a.semilogx([r["points"] for r in grid], [r["S_L"] for r in grid], "-o", color=AQUA,
+               label="FreeFlame, tighter slope/curve each point")
     for r in grid:
         a.annotate(f"slope {r['slope']:g}", (r["points"], r["S_L"]), textcoords="offset points",
                    xytext=(4, 4), fontsize=7, color=REF)
-    a.set(xlabel="grid points", ylabel="m/s", title="Flame speed at phi = 1 vs grid refinement")
+    if len(grid) >= 3:
+        ext = flame.richardson(grid)["S_L_extrapolated"]
+        a.axhline(ext, color=REF, lw=1, ls=":", label=f"extrapolated {ext:.4f} m/s")
+        a.legend(loc="upper right", fontsize=7)
+    a.set_xticks([125, 250, 500, 1000, 2000])
+    a.set_xticklabels(["125", "250", "500", "1000", "2000"])
+    a.minorticks_off()
+    a.set(xlabel="grid points (log scale)", ylabel="m/s", title="Flame speed at phi = 1 vs grid refinement")
     fig.tight_layout()
     fig.savefig(path, dpi=110)
 

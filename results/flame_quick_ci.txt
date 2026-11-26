@@ -1,0 +1,32 @@
+(CI, GitHub Actions run 45820729750, flame job: scripts/flame_study.py --quick)
+Cantera 3.2.0, gri30.yaml, mixture-averaged transport; Python 3.12.16 on Linux (x86_64)
+run: quick (CI-size), 2026-11-26 12:34
+
+(a) Adiabatic flame temperature, 300 K, 1 atm, equilibrate('HP'): 17 mixtures in 0.52 s
+    phi=1.00: 2225.5 K; peak 2232.4 K at phi=1.05; phi=0.60: 1665.9 K; phi=1.40: 1979.8 K
+
+(b) Laminar flame speed, FreeFlame, 300 K, 1 atm. Grid study at phi=1 (12 s; each level continues from the previous one):
+    ratio=3 slope=0.1 curve=0.2          125 points  S_L=0.38511 m/s  thickness 0.441 mm  11.1 s
+    ratio=3 slope=0.06 curve=0.12        187 points  S_L=0.38284 m/s  thickness 0.438 mm  1.2 s
+
+    Sweep with ratio=3 slope=0.06 curve=0.12: 3 flames in 19 s (phi nearest 1 from scratch, the others continued from it)
+    phi=0.80  S_L=0.2752 m/s  measured(298 K)=0.258   +6.7%  T_max=2002 K  204 pts  2.4 s
+    phi=1.00  S_L=0.3809 m/s  measured(298 K)=0.364   +4.7%  T_max=2231 K  196 pts  13.1 s
+    phi=1.20  S_L=0.3382 m/s  measured(298 K)=0.327   +3.4%  T_max=2138 K  213 pts  2.9 s
+    peak in this sweep: 0.3809 m/s at phi=1.00 (measured peak 0.372 m/s at phi=1.05)
+    phi=1 at 298 K: S_L=0.3770 m/s (-1.04% vs 300 K; 14 s); vs measured 0.364: +3.6%
+    source: Hermanns, R.T.E. (2007). Laminar burning velocities of methane-hydrogen-air mixtures. PhD thesis, TU Eindhoven, Table E.3 (heat flux method, 1 atm, 298 K). doi:10.6100/IR630126
+
+(c) Ignition delay, constant-pressure reactor, phi=1, max dT/dt (14 runs, 1.0 s):
+       1 atm: 1200 K 45.49 ms, 1300 K 11.67 ms, 1400 K 3.438 ms, 1500 K 1.171 ms, 1600 K 0.4673 ms, 1700 K 0.2159 ms, 1800 K 0.1122 ms
+             ln(tau) vs 1/T0: E/R = 21809 K, E = 181 kJ/mol, R^2 = 0.99979
+      10 atm: 1200 K 4.682 ms, 1300 K 1.453 ms, 1400 K 0.4993 ms, 1500 K 0.1871 ms, 1600 K 0.07603 ms, 1700 K 0.03365 ms, 1800 K 0.01631 ms
+             ln(tau) vs 1/T0: E/R = 20454 K, E = 170 kJ/mol, R^2 = 0.99854
+    1 atm / 10 atm delay ratio: 6.1 to 9.7 (tau ~ P^-n with n = 0.79 to 0.99)
+
+(d) Burnt gas, phi=1, 1 atm (the OpenFOAM inputs):
+    at T_ad                      T=2225.5 K  rho=0.15019 kg/m^3  mu=7.0918e-05 Pa s  nu=4.7218e-04 m^2/s
+    cooled, re-equilibrated      T=1500.0 K  rho=0.22449 kg/m^3  mu=5.4198e-05 Pa s  nu=2.4143e-04 m^2/s
+    cooled, frozen composition   T=1500.0 K  rho=0.22284 kg/m^3  mu=5.4254e-05 Pa s  nu=2.4346e-04 m^2/s
+
+total 46 s

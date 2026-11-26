@@ -1,0 +1,46 @@
+Cantera 3.2.0, gri30.yaml, mixture-averaged transport; Python 3.12.10 on Windows (AMD64)
+run: full local sweep, 2026-11-26 17:41
+
+(a) Adiabatic flame temperature, 300 K, 1 atm, equilibrate('HP'): 17 mixtures in 2.23 s
+    phi=1.00: 2225.5 K; peak 2232.4 K at phi=1.05; phi=0.60: 1665.9 K; phi=1.40: 1979.8 K
+
+(b) Laminar flame speed, FreeFlame, 300 K, 1 atm. Grid study at phi=1 (166 s; each level continues from the previous one):
+    ratio=3 slope=0.1 curve=0.2          125 points  S_L=0.38511 m/s  thickness 0.441 mm  34.4 s
+    ratio=3 slope=0.06 curve=0.12        187 points  S_L=0.38284 m/s  thickness 0.438 mm  3.4 s
+    ratio=3 slope=0.03 curve=0.06        357 points  S_L=0.37839 m/s  thickness 0.437 mm  10.3 s
+    ratio=2 slope=0.02 curve=0.04        514 points  S_L=0.37664 m/s  thickness 0.437 mm  15.2 s
+    ratio=2 slope=0.01 curve=0.02        982 points  S_L=0.37506 m/s  thickness 0.437 mm  42.9 s
+    ratio=2 slope=0.005 curve=0.01      1907 points  S_L=0.37419 m/s  thickness 0.437 mm  60.0 s
+    Richardson estimate from the last three levels: S_L = 0.37314 m/s, observed order 0.91 in 1/points
+
+    Sweep with ratio=2 slope=0.02 curve=0.04: 13 flames in 456 s (phi nearest 1 from scratch, the others continued from it)
+    phi=0.70  S_L=0.1932 m/s  measured(298 K)=0.167  +15.7%  T_max=1843 K  635 pts  78.3 s
+    phi=0.75  S_L=0.2331 m/s  measured(298 K)=0.215   +8.4%  T_max=1925 K  598 pts  39.0 s
+    phi=0.80  S_L=0.2713 m/s  measured(298 K)=0.258   +5.2%  T_max=2003 K  565 pts  25.9 s
+    phi=0.85  S_L=0.3062 m/s  measured(298 K)=0.296   +3.5%  T_max=2075 K  546 pts  25.8 s
+    phi=0.90  S_L=0.3364 m/s  measured(298 K)=0.327   +2.9%  T_max=2140 K  531 pts  7.5 s
+    phi=0.95  S_L=0.3604 m/s  measured(298 K)=0.349   +3.3%  T_max=2195 K  522 pts  8.4 s
+    phi=1.00  S_L=0.3764 m/s  measured(298 K)=0.364   +3.4%  T_max=2231 K  520 pts  70.5 s
+    phi=1.05  S_L=0.3835 m/s  measured(298 K)=0.372   +3.1%  T_max=2237 K  530 pts  7.9 s
+    phi=1.10  S_L=0.3798 m/s  measured(298 K)=0.370   +2.6%  T_max=2214 K  543 pts  14.4 s
+    phi=1.15  S_L=0.3635 m/s  measured(298 K)=0.356   +2.1%  T_max=2177 K  567 pts  22.6 s
+    phi=1.20  S_L=0.3333 m/s  measured(298 K)=0.327   +1.9%  T_max=2137 K  592 pts  28.3 s
+    phi=1.25  S_L=0.2892 m/s  measured(298 K)=0.283   +2.2%  T_max=2097 K  632 pts  41.4 s
+    phi=1.30  S_L=0.2357 m/s  measured(298 K)=0.230   +2.5%  T_max=2057 K  672 pts  83.5 s
+    peak in this sweep: 0.3835 m/s at phi=1.05 (measured peak 0.372 m/s at phi=1.05)
+    phi=1 at 298 K: S_L=0.3725 m/s (-1.04% vs 300 K; 101 s); vs measured 0.364: +2.3%
+    source: Hermanns, R.T.E. (2007). Laminar burning velocities of methane-hydrogen-air mixtures. PhD thesis, TU Eindhoven, Table E.3 (heat flux method, 1 atm, 298 K). doi:10.6100/IR630126
+
+(c) Ignition delay, constant-pressure reactor, phi=1, max dT/dt (14 runs, 7.6 s):
+       1 atm: 1200 K 45.49 ms, 1300 K 11.67 ms, 1400 K 3.438 ms, 1500 K 1.171 ms, 1600 K 0.4673 ms, 1700 K 0.2159 ms, 1800 K 0.1122 ms
+             ln(tau) vs 1/T0: E/R = 21808 K, E = 181 kJ/mol, R^2 = 0.99979
+      10 atm: 1200 K 4.682 ms, 1300 K 1.453 ms, 1400 K 0.4993 ms, 1500 K 0.1871 ms, 1600 K 0.07603 ms, 1700 K 0.03365 ms, 1800 K 0.01631 ms
+             ln(tau) vs 1/T0: E/R = 20454 K, E = 170 kJ/mol, R^2 = 0.99854
+    1 atm / 10 atm delay ratio: 6.1 to 9.7 (tau ~ P^-n with n = 0.79 to 0.99)
+
+(d) Burnt gas, phi=1, 1 atm (the OpenFOAM inputs):
+    at T_ad                      T=2225.5 K  rho=0.15019 kg/m^3  mu=7.0918e-05 Pa s  nu=4.7218e-04 m^2/s
+    cooled, re-equilibrated      T=1500.0 K  rho=0.22449 kg/m^3  mu=5.4198e-05 Pa s  nu=2.4143e-04 m^2/s
+    cooled, frozen composition   T=1500.0 K  rho=0.22284 kg/m^3  mu=5.4254e-05 Pa s  nu=2.4346e-04 m^2/s
+
+total 733 s

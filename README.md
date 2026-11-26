@@ -41,7 +41,7 @@ Cases are built in `work/` (or `$F2F_WORK`); nothing OpenFOAM writes is committe
 
 ## Step 1: Cantera
 
-GRI-Mech 3.0 (`gri30.yaml`), methane in air (O2 + 3.76 N2), 1 atm, unburnt gas at 300 K, mixture-averaged transport. All numbers in this step are from the full local run (`results/flame.txt`, Windows laptop, Cantera 3.2.0); the CI quick run reproduced every value it shares with it to the printed digits.
+GRI-Mech 3.0 (`gri30.yaml`), methane in air (O2 + 3.76 N2), 1 atm, unburnt gas at 300 K, mixture-averaged transport. All numbers in this step are from the full local run (`results/flame.txt`, Windows laptop, Cantera 3.2.0); the CI quick run (`results/flame_quick_ci.txt`, Linux) reproduced every value it shares with it to the printed digits, in about a third of the time.
 
 **(a) Adiabatic flame temperature** (`equilibrate("HP")`, 17 mixtures in 2.2 s):
 
@@ -126,7 +126,9 @@ How each is measured: u_max/U is the peak of a parabola fitted to the 10/20/40 c
 - **Cost:** the four cases took 7-11 s of wall time in CI (the fine one 3-4 s of solving); the whole flow job about 1 minute, including pulling the image (about 250 MB compressed).
 - Entrance pressure loss beyond the developed gradient, K = (p_in - |dp/dx| L) / (U^2/2): 0.49, 0.55 and 0.56 on the three levels (not compared with a reference here).
 
-![flow](results/flow.png)
+![OpenFOAM channel: profiles, centreline velocity, mesh convergence](results/flow.png)
+
+![Cantera: flame temperature, flame speed vs measurements, ignition delay, grid study](results/flame.png)
 
 ## What broke, and what I learned
 
@@ -163,5 +165,5 @@ How each is measured: u_max/U is the peak of a parabola fitted to the 10/20/40 c
 | `scripts/flame_study.py`, `scripts/flow_study.py` | the measurements; output in `results/` |
 | `scripts/exercise.py` | one channel case with your own settings |
 | `tests/` | 64 test cases: Cantera (10), channel helpers (10), Gmsh (4), OpenFOAM files and readers (6), OpenFOAM runs (34) |
-| `results/` | `flame.txt` and CSVs (full local run), `flow.txt` and `flow_summary.json` (CI), plots |
+| `results/` | `flame.txt`, CSVs, `products.json`, `flame.png` (full local run); `flame_quick_ci.txt` (CI quick run); `flow.txt`, `flow_summary.json`, `flow.png` (CI) |
 | `LEARN.md` | the three tools, questions to explain without notes, one hands-on exercise per tool |

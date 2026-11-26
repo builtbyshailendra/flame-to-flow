@@ -1,0 +1,372 @@
+{
+ "channel": {
+  "h": 0.01,
+  "length_h": 30.0,
+  "dz_h": 0.1,
+  "nu": 0.0002414271524122944,
+  "rho": 0.22449125654520094,
+  "re": 200.0,
+  "length": 0.3,
+  "dz": 0.001,
+  "u_mean": 4.828543048245888,
+  "dpdx_kinematic": -139.88896781258217,
+  "dpdx_pa": -31.40385016105774,
+  "entrance_length": 0.08920699215445213
+ },
+ "products": {
+  "phi": 1.0,
+  "P": 101325.0,
+  "mechanism": "gri30.yaml",
+  "transport": "mixture-averaged",
+  "flame": {
+   "T": 2225.524583476979,
+   "rho": 0.1501942454697537,
+   "mu": 7.091822606170665e-05,
+   "nu": 0.0004721767191539189,
+   "W": 27.428576058820813
+  },
+  "duct": {
+   "T": 1500.0,
+   "rho": 0.22449125654520094,
+   "mu": 5.419828480916571e-05,
+   "nu": 0.0002414271524122944,
+   "W": 27.63174181734362
+  },
+  "duct_frozen": {
+   "T": 1500.0,
+   "rho": 0.22284065704114972,
+   "mu": 5.4253536512286926e-05,
+   "nu": 0.00024346336630244486,
+   "W": 27.428576058820813
+  }
+ },
+ "foam_image": "opencfd/openfoam-run:2406",
+ "total_wall_s": 8.367506591999998,
+ "cases": {
+  "blockMesh_coarse": {
+   "mesh": {
+    "nx": 120,
+    "ny": 10,
+    "cells": 1200
+   },
+   "solver": {
+    "iterations": 194,
+    "converged": true,
+    "final_initial_residuals": {
+     "Ux": 4.74376444148e-10,
+     "Uy": 9.94821005613e-08,
+     "p": 1.47847745029e-09
+    },
+    "execution_s": 0.2,
+    "clock_s": 0.0
+   },
+   "checkMesh": {
+    "ok": true,
+    "cells": 1200,
+    "faces": 4930,
+    "points": 2662,
+    "patch_faces": {
+     "inlet": 10,
+     "outlet": 10,
+     "walls": 240,
+     "frontAndBack": 2400
+    }
+   },
+   "profile": {
+    "points": 10,
+    "u_mean_sampled": 4.828543068119001,
+    "umax_ratio": 1.485265987847699,
+    "umax_cell_ratio": 1.4705324072443506,
+    "l2_rel": 0.009059787669527227,
+    "max_abs_rel": 0.009645061837099785,
+    "station_h": 25.03,
+    "v_max_rel": 2.749005193859059e-06
+   },
+   "discrete_1d": {
+    "dpdx": -137.14604687508054,
+    "umax_cell_ratio": 1.470588235294118,
+    "l2_rel": 0.009040234305696646
+   },
+   "pressure": {
+    "dpdx_kinematic": -137.1769819280202,
+    "dpdx_exact": -139.88896781258217,
+    "rel_error": -0.01938670309009194,
+    "rel_error_vs_discrete_1d": 0.00022556284810626437,
+    "dpdx_pa": -30.79503304209958,
+    "dpdx_pa_exact": -31.40385016105774,
+    "fit_from_h": 22.0,
+    "fit_to_h": 28.0,
+    "fit_points": 241,
+    "fit_max_resid_rel": 4.7190166678671266e-05,
+    "p_inlet_kinematic": 47.6583461456,
+    "p_inlet_pa": 10.698882011091879,
+    "entrance_loss_K": 0.48824343112896307,
+    "local_excess_pct": {
+     "5": 21.795913776609098,
+     "10": 3.8681966019448843,
+     "15": 0.6753271756818391,
+     "20": 0.11694724607231866,
+     "25": 0.020217735441407925
+    }
+   },
+   "entrance": {
+    "L_e_m": 0.09250667974745855,
+    "L_e_over_h": 9.250667974745854,
+    "durst_over_h": 8.920699215445213,
+    "rel_error_vs_durst": 0.03698911389472004,
+    "uc_fd_ratio": 1.4704622410140904,
+    "u_fd_from_h": 20.0,
+    "u_fd_to_h": 27.0
+   },
+   "wall_s": 0.772593963999995,
+   "mesher": "blockMesh"
+  },
+  "blockMesh_medium": {
+   "mesh": {
+    "nx": 240,
+    "ny": 20,
+    "cells": 4800
+   },
+   "solver": {
+    "iterations": 164,
+    "converged": true,
+    "final_initial_residuals": {
+     "Ux": 5.81352458576e-10,
+     "Uy": 9.6188983931e-08,
+     "p": 2.35828926951e-09
+    },
+    "execution_s": 0.64,
+    "clock_s": 1.0
+   },
+   "checkMesh": {
+    "ok": true,
+    "cells": 4800,
+    "faces": 19460,
+    "points": 10122,
+    "patch_faces": {
+     "inlet": 20,
+     "outlet": 20,
+     "walls": 480,
+     "frontAndBack": 9600
+    }
+   },
+   "profile": {
+    "points": 20,
+    "u_mean_sampled": 4.828543049624101,
+    "umax_ratio": 1.4962502336940868,
+    "umax_cell_ratio": 1.4924961319311434,
+    "l2_rel": 0.0023317035869807774,
+    "max_abs_rel": 0.0025025787125712287,
+    "station_h": 25.03,
+    "v_max_rel": 1.9105180681719846e-06
+   },
+   "discrete_1d": {
+    "dpdx": -139.1930027985893,
+    "umax_cell_ratio": 1.4925373134328357,
+    "l2_rel": 0.0023185989553768244
+   },
+   "pressure": {
+    "dpdx_kinematic": -139.215610505751,
+    "dpdx_exact": -139.88896781258217,
+    "rel_error": -0.004813512583303314,
+    "rel_error_vs_discrete_1d": 0.0001624198537795163,
+    "dpdx_pa": -31.252687333143317,
+    "dpdx_pa_exact": -31.40385016105774,
+    "fit_from_h": 22.0,
+    "fit_to_h": 28.0,
+    "fit_points": 241,
+    "fit_max_resid_rel": 3.6182547502584495e-05,
+    "p_inlet_kinematic": 48.4214155263,
+    "p_inlet_pa": 10.87018441519639,
+    "entrance_loss_K": 0.5537012918279426,
+    "local_excess_pct": {
+     "5": 22.173362296137423,
+     "10": 3.6392671323694614,
+     "15": 0.5789983585437364,
+     "20": 0.09131507967954366,
+     "25": 0.014380407790981486
+    }
+   },
+   "entrance": {
+    "L_e_m": 0.09126593015101132,
+    "L_e_over_h": 9.126593015101133,
+    "durst_over_h": 8.920699215445213,
+    "rel_error_vs_durst": 0.023080455318954973,
+    "uc_fd_ratio": 1.492441441886875,
+    "u_fd_from_h": 20.0,
+    "u_fd_to_h": 27.0
+   },
+   "wall_s": 1.3318886710000015,
+   "mesher": "blockMesh"
+  },
+  "blockMesh_fine": {
+   "mesh": {
+    "nx": 480,
+    "ny": 40,
+    "cells": 19200
+   },
+   "solver": {
+    "iterations": 160,
+    "converged": true,
+    "final_initial_residuals": {
+     "Ux": 9.81635896941e-09,
+     "Uy": 9.73285593573e-08,
+     "p": 6.38378626659e-10
+    },
+    "execution_s": 3.35,
+    "clock_s": 3.0
+   },
+   "checkMesh": {
+    "ok": true,
+    "cells": 19200,
+    "faces": 77320,
+    "points": 39442,
+    "patch_faces": {
+     "inlet": 40,
+     "outlet": 40,
+     "walls": 960,
+     "frontAndBack": 38400
+    }
+   },
+   "profile": {
+    "points": 40,
+    "u_mean_sampled": 4.8285430481237,
+    "umax_ratio": 1.4990468871391736,
+    "umax_cell_ratio": 1.4980886624336538,
+    "l2_rel": 0.0005955275719324703,
+    "max_abs_rel": 0.000649279055001812,
+    "station_h": 25.03,
+    "v_max_rel": 1.8017003214251934e-06
+   },
+   "discrete_1d": {
+    "dpdx": -139.71432490644938,
+    "umax_cell_ratio": 1.4981273408239701,
+    "l2_rel": 0.0005833828675740198
+   },
+   "pressure": {
+    "dpdx_kinematic": -139.7353908785703,
+    "dpdx_exact": -139.88896781258217,
+    "rel_error": -0.0010978487897459477,
+    "rel_error_vs_discrete_1d": 0.00015077889926495835,
+    "dpdx_pa": -31.36937348216506,
+    "dpdx_pa_exact": -31.40385016105774,
+    "fit_from_h": 22.0,
+    "fit_to_h": 28.0,
+    "fit_points": 241,
+    "fit_max_resid_rel": 3.412064672311953e-05,
+    "p_inlet_kinematic": 48.5216636248,
+    "p_inlet_pa": 10.89268923679492,
+    "entrance_loss_K": 0.5623008061485547,
+    "local_excess_pct": {
+     "5": 22.518841152914938,
+     "10": 3.6195275587815434,
+     "15": 0.5621251035470287,
+     "20": 0.0865458095518079,
+     "25": 0.013306190021822317
+    }
+   },
+   "entrance": {
+    "L_e_m": 0.09124799972702172,
+    "L_e_over_h": 9.12479997270217,
+    "durst_over_h": 8.920699215445213,
+    "rel_error_vs_durst": 0.022879457352802612,
+    "uc_fd_ratio": 1.4980370129395735,
+    "u_fd_from_h": 20.0,
+    "u_fd_to_h": 27.0
+   },
+   "wall_s": 4.570381304999998,
+   "mesher": "blockMesh"
+  },
+  "gmsh_medium": {
+   "mesh": {
+    "nx": 240,
+    "ny": 20,
+    "cells": 4800
+   },
+   "solver": {
+    "iterations": 164,
+    "converged": true,
+    "final_initial_residuals": {
+     "Ux": 5.7622102882e-10,
+     "Uy": 9.55695662663e-08,
+     "p": 2.34201636978e-09
+    },
+    "execution_s": 0.62,
+    "clock_s": 0.0
+   },
+   "checkMesh": {
+    "ok": true,
+    "cells": 4800,
+    "faces": 19460,
+    "points": 10122,
+    "patch_faces": {
+     "frontAndBack": 9600,
+     "walls": 480,
+     "outlet": 20,
+     "inlet": 20
+    }
+   },
+   "profile": {
+    "points": 20,
+    "u_mean_sampled": 4.8285430496245505,
+    "umax_ratio": 1.496250233694251,
+    "umax_cell_ratio": 1.4924961319311434,
+    "l2_rel": 0.0023317035868582123,
+    "max_abs_rel": 0.0025025787127712367,
+    "station_h": 25.03,
+    "v_max_rel": 1.9105180290152456e-06
+   },
+   "discrete_1d": {
+    "dpdx": -139.1930027985893,
+    "umax_cell_ratio": 1.4925373134328357,
+    "l2_rel": 0.0023185989553768244
+   },
+   "pressure": {
+    "dpdx_kinematic": -139.215610506149,
+    "dpdx_exact": -139.88896781258217,
+    "rel_error": -0.004813512580458035,
+    "rel_error_vs_discrete_1d": 0.0001624198566390067,
+    "dpdx_pa": -31.252687333232668,
+    "dpdx_pa_exact": -31.40385016105774,
+    "fit_from_h": 22.0,
+    "fit_to_h": 28.0,
+    "fit_points": 241,
+    "fit_max_resid_rel": 3.6182544061175594e-05,
+    "p_inlet_kinematic": 48.4214155271,
+    "p_inlet_pa": 10.870184415375983,
+    "entrance_loss_K": 0.5537012918965685,
+    "local_excess_pct": {
+     "5": 22.173362439823908,
+     "10": 3.639267132364221,
+     "15": 0.5789982148624917,
+     "20": 0.09131507967954366,
+     "25": 0.014380422159354644
+    }
+   },
+   "entrance": {
+    "L_e_m": 0.09126593020010312,
+    "L_e_over_h": 9.126593020010311,
+    "durst_over_h": 8.920699215445213,
+    "rel_error_vs_durst": 0.023080455869268324,
+    "uc_fd_ratio": 1.492441441886779,
+    "u_fd_from_h": 20.0,
+    "u_fd_to_h": 27.0
+   },
+   "wall_s": 1.6845193190000032,
+   "mesher": "gmsh",
+   "gmsh": {
+    "elements": {
+     "Hexahedron 8": 4800
+    },
+    "nodes": 10122,
+    "patch_types_from_gmshToFoam": {
+     "inlet": "patch",
+     "outlet": "patch",
+     "walls": "patch",
+     "frontAndBack": "patch"
+    },
+    "wall_bump": null
+   }
+  }
+ }
+}
