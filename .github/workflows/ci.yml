@@ -18,6 +18,8 @@ env:
 jobs:
   flame:
     name: Cantera, Gmsh and unit tests
+    # branches named exercise-... (LEARN.md, "Your turn") only need the OpenFOAM job
+    if: ${{ !startsWith(github.ref_name, 'exercise') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -68,9 +70,14 @@ jobs:
         run: python -m pytest -m foam
       - name: flow report
         run: python scripts/flow_study.py --out ci-results
-      - name: your exercise (runs only when exercise.txt exists; see LEARN.md, "Your turn")
+      - name: your exercise (runs only when exercise.txt exists; one case per line; see LEARN.md)
         if: hashFiles('exercise.txt') != ''
-        run: python scripts/exercise.py $(cat exercise.txt)
+        run: |
+          grep -v '^\s*\(#\|$\)' exercise.txt | while read -r args; do
+            echo "::group::python scripts/exercise.py $args"
+            python scripts/exercise.py $args
+            echo "::endgroup::"
+          done
       - name: collect logs
         if: always()
         run: |

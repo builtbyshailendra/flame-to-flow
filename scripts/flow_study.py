@@ -129,9 +129,10 @@ def plot(path: Path, res: dict):
         a.plot(np.array(cl["x"]) / h, np.array(cl["u"]) / U, color=color, lw=1.5 if "gmsh" in name else 2,
                ls="--" if "gmsh" in name else "-", label=name.replace("_", " "))
     a.axvline(ch["entrance_length"] / h, color=REF, lw=1, ls=":")
-    a.annotate(f"Durst L_e = {ch['entrance_length'] / h:.2f} h", (ch["entrance_length"] / h, 1.05),
+    a.annotate(f"Durst L_e = {ch['entrance_length'] / h:.2f} h", (ch["entrance_length"] / h, 1.2),
                xytext=(4, 0), textcoords="offset points", fontsize=7, color=REF)
-    a.set(xlabel="x / h", ylabel="u_centre / U_mean", title=f"Centreline velocity, Re = {ch['re']:.0f}")
+    a.set(xlabel="x / h", ylabel="u_centre / U_mean",
+          title=f"Centreline velocity, Re = {ch['re']:.0f} (y = h/2 is a face: 2-cell average)")
     a.legend(loc="lower right", fontsize=7)
 
     a = ax[2]
@@ -142,7 +143,11 @@ def plot(path: Path, res: dict):
         a.loglog(ny, [abs(cases[n][key][sub]) for n in block], "o-", color=color, label=label)
     e0 = abs(cases[block[0]]["pressure"]["rel_error"])
     a.loglog(ny, [e0 * (ny[0] / n) ** 2 for n in ny], color=REF, lw=1, ls=":", label="slope -2")
-    a.set(xlabel="cells across the channel", ylabel="relative error", title="Mesh convergence (blockMesh)")
+    a.set_xticks(ny)
+    a.set_xticklabels([str(n) for n in ny])
+    a.minorticks_off()
+    a.set(xlabel="cells across the channel (log scale)", ylabel="relative error",
+          title="Mesh convergence (blockMesh)")
     a.legend(fontsize=7)
     fig.tight_layout()
     fig.savefig(path, dpi=110)
