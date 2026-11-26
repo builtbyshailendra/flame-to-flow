@@ -82,6 +82,7 @@ jobs:
         if: always()
         run: |
           mkdir -p ci-results/logs
+          cp work/study.json ci-results/ 2>/dev/null || true
           for d in work/*/; do
             n=$(basename "$d"); mkdir -p "ci-results/logs/$n"
             cp "$d"log.* "ci-results/logs/$n/" 2>/dev/null || true

@@ -65,8 +65,9 @@ def main():
     print(f"profile L2 error: {pr['l2_rel'] * 100:.3f}%")
     print(f"dp/dx (fit over {p['fit_from_h']:g}-{p['fit_to_h']:g} h): {p['dpdx_kinematic']:.4f} m/s^2 = "
           f"{p['dpdx_pa']:.4f} Pa/m, error {p['rel_error'] * 100:+.3f}%")
-    print("local dp/dx, % steeper than developed: " +
-          ", ".join(f"{k} h {v:+.3f}" for k, v in p["local_excess_pct"].items()))
+    if a.bump is None:   # the reference is the uniform-cell discrete gradient
+        print("local dp/dx, % steeper than developed: " +
+              ", ".join(f"{k} h {v:+.3f}" for k, v in p["local_excess_pct"].items()))
     print(f"entrance length: {e['L_e_over_h']:.2f} h (Durst {e['durst_over_h']:.2f} h, "
           f"{e['rel_error_vs_durst'] * 100:+.1f}%)")
     # what the 1-D discrete equations predict on the same cells across the channel

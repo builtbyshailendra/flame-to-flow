@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -37,8 +38,10 @@ def main():
     ch, cases, props = res["channel"], res["cases"], res["products"]
     L = []
     say = L.append
+    run = os.environ.get("GITHUB_RUN_ID")
     say(f"OpenFOAM v2406 ({res['foam_mode']}{', ' + res['foam_image'] if res['foam_image'] else ''}), "
-        f"simpleFoam, steady laminar; written {time.strftime('%Y-%m-%d %H:%M')}")
+        f"simpleFoam, steady laminar; written {time.strftime('%Y-%m-%d %H:%M')}"
+        + (f" by GitHub Actions run {run}" if run else ""))
     d = props["duct"]
     say(f"fluid: burnt stoichiometric methane-air at {d['T']:.0f} K, 1 atm (Cantera, GRI-Mech 3.0): "
         f"rho={d['rho']:.5f} kg/m^3, mu={d['mu']:.4e} Pa s, nu={d['nu']:.4e} m^2/s")
@@ -121,7 +124,7 @@ def plot(path: Path, res: dict):
         p = c["profiles"][key]
         a.plot(np.array(p["u"]) / U, np.array(p["y"]) / h, "o", ms=3.5, color=color, label=f"x = {key} h")
     a.set(xlabel="u / U_mean", ylabel="y / h", title="Profiles, blockMesh medium (cell values)")
-    a.legend(loc="lower left", fontsize=7)
+    a.legend(loc="center left", fontsize=7)
 
     a = ax[1]
     for name, color in (("blockMesh_coarse", AQUA), ("blockMesh_fine", BLUE), ("gmsh_medium", ORANGE)):
