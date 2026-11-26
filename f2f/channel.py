@@ -100,6 +100,32 @@ def discrete_poiseuille(ny: int, h: float = 1.0, u_mean: float = 1.0, nu: float 
     return y, sol[:ny], sol[ny]
 
 
+def discrete_poiseuille_faces(yf, u_mean: float = 1.0, nu: float = 1.0):
+    """The same 1-D discrete equations on any cell faces yf (0 = yf[0] < ... < yf[-1] = h),
+    e.g. a mesh graded towards the walls. Gradients are taken between cell centres, and at a
+    wall between the wall and the first centre, as OpenFOAM's Gauss linear laplacian does.
+    Returns (y_cell_centres, u_cells, dpdx_kinematic)."""
+    yf = np.asarray(yf, float)
+    n = len(yf) - 1
+    yc = 0.5 * (yf[1:] + yf[:-1])
+    vol = np.diff(yf)
+    a = np.zeros((n + 1, n + 1))
+    b = np.zeros(n + 1)
+    for j in range(n):
+        for nb, wall in ((j - 1, yf[0]), (j + 1, yf[-1])):
+            if 0 <= nb < n:
+                c = nu / abs(yc[nb] - yc[j])
+                a[j, j] -= c
+                a[j, nb] += c
+            else:
+                a[j, j] -= nu / abs(yc[j] - wall)
+        a[j, n] = -vol[j]
+    a[n, :n] = vol / (yf[-1] - yf[0])
+    b[n] = u_mean
+    sol = np.linalg.solve(a, b)
+    return yc, sol[:n], sol[n]
+
+
 def profile_metrics(y: np.ndarray, u: np.ndarray, h: float, u_mean: float) -> dict:
     """Checks of a sampled cell-centre profile against Poiseuille.
 

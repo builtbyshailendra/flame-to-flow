@@ -68,6 +68,9 @@ jobs:
         run: python -m pytest -m foam
       - name: flow report
         run: python scripts/flow_study.py --out ci-results
+      - name: your exercise (runs only when exercise.txt exists; see LEARN.md, "Your turn")
+        if: hashFiles('exercise.txt') != ''
+        run: python scripts/exercise.py $(cat exercise.txt)
       - name: collect logs
         if: always()
         run: |
