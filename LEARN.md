@@ -29,7 +29,7 @@ Two tools agreeing with each other and with theory is the evidence that each was
 **Where it is used here.** `f2f/flame.py` (all four calculations), `scripts/flame_study.py` (the full sweep and plots), `tests/test_flame.py`.
 
 **Pitfalls met.**
-- The first flame solve takes 35-45 s on this laptop (Cantera builds the solution in stages from a guess); a sweep that starts each flame from a converged neighbour takes 5-15 s per flame.
+- The first flame solve takes 35-70 s on this laptop (Cantera builds the solution in stages from a guess). Starting the other mixtures from that converged flame took 8 s near stoichiometric and up to 84 s at phi 0.7 and 1.3.
 - Cantera's default of 1,000 grid points stopped the finest grid study level (`max number of grid points reached`); `set_max_grid_points` raises it.
 - Continuing a sweep from the previous phi makes the grid depend on the order of the sweep (points are only added). Here every phi starts from the same stoichiometric solution.
 - The measurements are at 298 K and the requested sweep at 300 K: 2 K are worth about 1% of S_L, the same size as the grid error at the sweep's settings.
